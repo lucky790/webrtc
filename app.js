@@ -40,7 +40,7 @@ socket.on('addlistvc',(data)=>{
         console.log('user joined in waiting vc  list',socket.id);
         console.log(waitingUsersvc);
         }
-});z
+});
 socket.on('ice-candidate',(candidate)=>{
     socket.to(socket.room).emit('new-ice-candidate',candidate)
 });

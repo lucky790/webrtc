@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Video App</title>
+</head>
+<style>
+    /* Reset some default styles for consistency */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Set a background color for the whole page */
+body {
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+/* Style the header */
+header {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+}
+
+/* Center the main content */
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Ensure the main content covers the entire viewport height */
+}
+
+/* Create a container for the videos */
+.video-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    border: solid red;
+    max-width: 800px; /* Adjust this to your desired maximum width */
+}
+
+/* Style the remote video box */
+.remote-video {
+    width: 100%;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+}
+
+/* Style the local video box */
+.local-video {
+    width: 100%;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+
+/* Style the "Start New Chat" button */
+.start-new-chat {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+/* Add responsive styles */
+@media (max-width: 768px) {
+    .video-container {
+        flex-direction: column-reverse;
+    }
+
+    .remote-video,
+    .local-video {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+</style>
+<body>
+    <header>
+        <h1>Annochat</h1>
+    </header>
+
+    <main>
+        <div class="video-container">
+            <div class="remote-video">
+                <video id="user-1-video" autoplay playsinline></video>
+            </div>
+            <div class="local-video">
+                <video id="user-2-video" autoplay playsinline></video>
+            </div>
+        </div>
+
+        <footer>
+            <button class="start-new-chat">Start New Chat</button>
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Video Chat</title>
+<!-- <link rel="stylesheet" href="style.css"> -->
+<!-- <script src="http://localhost:300/socket.io/socket.io.js"></script> -->
+<script src="/socket.io/socket.io.js"></script>
+</head>
+        <style>
+            body {
+  font-family: sans-serif;
+}
+
+#videos {
+  width: 100%;
+  height: 50%;
+}
+
+#user-1-video {
+  float: left;
+  width: 45%;
+  border: solid black;
+}
+
+#user-2-video {
+  float: right;
+  width: 45%;
+  border: solid green;
+}
+
+#chat-box {
+  width: 100%;
+  height: 50%;
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+
+#chat-messages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#message-input {
+  width: 100%;
+  height: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+#send-button {
+  background-color: #337ab7;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+#startnewchat{
+  background-color: #5433cb61;
+    color: #010805b5;
+    justify-content: center;
+    position: inherit;
+    display: flex;
+    font-family: cursive;
+    margin-left: 0px;
+}
+
+        </style>
+<body>
+<div id="videos">
+  <video class="video-player" id="user-1-video" autoplay playsinline></video>
+  <video class="video-player" id="user-2-video"  autoplay playsinline></video>
+</div>
+<div id="chat-box">
+  <ul id="chat-messages"></ul>
+  <input type="text" id="message-input" placeholder="Type your message here...">
+  <button id="send-button">Send</button>
+</div>
+<div class="startchat">
+  <button onclick ="addlistvc()" id="startnewchat">startnewchat</button>
+  <button onclick="createOffer()" id="createOffer">createOffer</button>
+</div>
+</body><script>
+    var socket = io();
+    let peerConnection;
+    let localStream;
+    let remoteStream;
+
+    let init = async() =>{
+        localStream = await navigator.mediaDevices.getUserMedia({video :true,audio:false })
+
+        document.getElementById("user-1-video").srcObject = localStream
+ 
+          // Create an RTCPeerConnection object
+          peerConnection = new RTCPeerConnection();
+
+        // Add the local stream to the peer connection
+        localStream.getTracks().forEach((track) => {
+          peerConnection.addTrack(track, localStream);
+        });
+
+    }
+    init()
+    socket.on('rcvoffer', async (data)=>{
+      let data = offer
+      
+    
+    // Set up a new RTCPeerConnection object for User B
+    // peerConnection = new RTCPeerConnection();
+
+    // Add the local stream to the peer connection (if needed)
+    // localStream.getTracks().forEach((track) => {
+    //   peerConnection.addTrack(track, localStream);
+    // });
+    const sessionDescription = new RTCSessionDescription((offer));
+    await this.peerConnection.setRemoteDescription(sessionDescription);
+        // console.log(offer,offer.type)
+      // Set the remote description to the received offer
+      // await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+      console.log('setting remotedescription')
+
+        // Create an answer
+      const answer = await peerConnection.createAnswer();
+      console.log('creating answer')
+
+        // Set the local description to the answer
+        await peerConnection.setLocalDescription(answer);
+        console.log('setting the answer to local')
+
+          // Send the answer back to the offerer via the signaling server (Socket.IO)
+        socket.emit('answer',answer);
+        console.log("sending thr answer");
+      }
+);
+socket.on('rcvanswer', async (answer) => {
+  try {
+    // Set the remote description to the received answer
+    await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+  } catch (error) {
+    console.error('Error handling answer:', error);
+  }
+});
+   
+    async function createOffer(){
+      try {
+    const offer = await peerConnection.createOffer();
+    await peerConnection.setLocalDescription(offer);
+    // new RTCSessionDescription(offer);
+
+    // Send the offer to the other user via your signaling server (Socket.IO)
+    socket.emit('offer', offer);
+  } catch (error) {
+    console.error('Error creating offer:', error);
+  }
+    };
+   
+    function addlistvc(){
+      socket.emit('addlistvc',socket.id);
+      // createOffer();
+      // ClearChatBox();
+      // isactivechat = true;
+      // updateactionbtn('ENDCHAT');
+    }
+
+</script>
+</html>
